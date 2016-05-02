@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="item">
+	<insert id="insert" parameterType="kr.ice.cream.dto.ItemDTO">
+		INSERT INTO item
+		(title,price,content,meterial) VALUES
+		(#{title},#{price},#{content},#{meterial});
+	</insert>
+	<select id="pullAllItem" resultType="kr.ice.cream.dto.ItemDTO">
+		SELECT *
+		FROM item
+		ORDER BY srl DESC;
+	</select>
+	<select id="pullItem" parameterType="Integer" resultType="kr.ice.cream.dto.ItemDTO">
+		SELECT *
+		FROM item
+		WHERE srl=#{srl};
+	</select>
+	<select id="pullPrice" parameterType="Integer" resultType="Integer">
+		SELECT price
+		FROM item
+		WHERE srl=#{srl};
+	</select>
+	<select id="pullMinItem" resultType="kr.ice.cream.dto.ItemDTO">
+		SELECT *
+		FROM item
+		WHERE price=2800
+		ORDER BY srl DESC ;
+	</select>
+	<select id="minItemCount" resultType="Integer">
+		SELECT count(*)
+		FROM item
+		WHERE price=2800;
+	</select>
+	<select id="itemCount" resultType="Integer">
+		SELECT COUNT(*)
+		FROM item;
+	</select>
+	<select id="pullItemByTitle" parameterType="String" resultType="kr.ice.cream.dto.ItemDTO">
+		SELECT *
+		FROM item
+		WHERE price=2800 and title=#{title};
+	</select>
+	<select id="bestItem" parameterType="String" resultType="kr.ice.cream.dto.ItemDTO">
+		select b.* 
+		from itemlist a,item b where b.srl=a.itemsrl 
+		group by b.srl 
+		order by sum(amount) desc limit 4;
+	</select>
+	
+	<select id="myConcept" parameterType="java.util.HashMap" resultType="kr.ice.cream.dto.ItemDTO">
+		select d.*
+		from customer a ,orders b,itemlist c, item d 
+		where a.srl = b.customersrl and b.sort = c.sort and d.srl = c.itemsrl and sex=#{sex}
+		and left(age,1) between left(#{age},1) and left(#{age},1)+1 
+		group by d.srl 
+		order by sum(amount) desc 
+		limit 4;
+	</select>
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="basket">
+    <insert id="input" parameterType="kr.ice.cream.dto.BasketDTO">
+		INSERT  INTO basket
+		(customersrsl, itemsrl, amount, inputdate, status) VALUES
+		(#{customersrl}, #{itemsrl}, #{amount}, now(), #{status});
+	</insert>
+    <update id="alterStatus" parameterType="Integer">
+		UPDATE basket
+		SET status=0
+		WHERE srl=#{srl};
+	</update>
+
+    <insert id="insertCart" parameterType="kr.ice.cream.dto.BasketDTO">
+		INSERT INTO basket
+		(customersrl, itemsrl, inputdate) VALUES
+		(#{customersrl},#{itemsrl},NOW());
+	</insert>
+
+<!--    <select id="pullList" parameterType="Integer" resultType="kr.ice.cream.dto.ItemDTO">
+		select a.srl,a.category,a.price,a.title,a.content,a.meterial,a.photo
+		from item a,basket
+		where a.srl = itemsrl and customersrl=#{customersrl} and status=1;
+	</select>-->
+	<select id="pullList" parameterType="Integer" resultType="kr.ice.cream.dto.BasketItemDTO">
+		select b.itemsrl, b.status, b.amount, b.srl, a.title, a.price, a.content, a.meterial, a.photo
+		from item a,basket b
+		where a.srl = b.itemsrl and customersrl=#{customersrl} and status=1;
+	</select>
+
+    <update id="alterItem" parameterType="java.util.HashMap">
+		UPDATE basket
+		SET status=0
+		WHERE customersrl=#{cusSrl} and itemsrl=#{itemSrl};
+	</update>
+
+    <select id="pullItemSrl" parameterType="Integer" resultType="Integer">
+		SELECT itemsrl
+		FROM basket
+		WHERE customersrl=#{cusstomersrl} and status=1;
+	</select>
+</mapper>

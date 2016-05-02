@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="itemlist">
+	<insert id="input" parameterType="kr.ice.cream.dto.ItemlistDTO">
+		INSERT INTO itemlist
+		(itemsrl, amount, sort) VALUES
+		(#{itemsrl},#{amount},#{sort});
+	</insert>
+	<select id="pullItemSrl" parameterType="String" resultType="Integer">
+		SELECT itemsrl
+		FROM itemlist
+		WHERE sort=#{sort};
+	</select>
+	<select id="pullItemlist" parameterType="String" resultType="kr.ice.cream.dto.ItemlistDTO">
+		SELECT *
+		FROM itemlist
+		WHERE sort=#{sort};
+	</select>
+	<select id="pullOrderItemlist" parameterType="String" resultType="kr.ice.cream.dto.OrderItem">
+		select il.amount, il.itemsrl,i.title,i.price,i.photo from itemlist il join item i on il.itemsrl=i.srl
+		where sort=#{sort};
+	</select>
+
+</mapper>

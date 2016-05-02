@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="orders">
+	<insert id="input" parameterType="kr.ice.cream.dto.OrdersDTO">
+		INSERT INTO orders
+		(customersrl, title, content, sort, starttime) VALUES
+		(#{customersrl},#{title},#{content},#{sort},now());
+	</insert>
+	<update id="plusPrice" parameterType="kr.ice.cream.dto.OrdersDTO">
+		UPDATE orders
+		SET price=#{price}
+		WHERE sort=#{sort};
+	</update>
+	<select id="pullAllSort" resultType="String">
+		SELECT sort
+		FROM orders;
+	</select>
+	<select id="pullOrderInfo" parameterType="Integer" resultType="kr.ice.cream.dto.OrdersDTO">
+		SELECT *
+		FROM orders
+		WHERE srl=#{srl};
+	</select>
+	<update id="alterPhase" parameterType="Integer">
+		UPDATE orders
+		SET phase=1
+		WHERE srl=#{srl};
+	</update>
+	<select id="pullOrder10" resultType="kr.ice.cream.dto.OrdersDTO">
+		select * from orders where phase=0 order by starttime limit 10;
+	</select>
+	<select id="pullCustomerOrder" parameterType="Integer" resultType="kr.ice.cream.dto.OrdersDTO">
+		select * from orders where customersrl = #{customersrl} order by starttime desc;
+	</select>
+	<select id="pullAllOrder" resultType="kr.ice.cream.dto.OrdersDTO">
+		select * from orders where phase=1 order by starttime desc;
+	</select>
+	<select id="getcount" resultType="Integer">
+		select COUNT(*) from orders;
+	</select>
+</mapper>

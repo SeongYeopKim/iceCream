@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="admin">
+	<select id="dayamount" resultType="java.util.HashMap">
+		SELECT sum(price)
+		value,DATE(starttime) dayamount
+		FROM icecream.orders
+		group by
+		dayamount
+		order by dayamount;
+	</select>
+	<select id="bestmenu" resultType="java.util.HashMap">
+		select sum(il.amount)
+		amount,i.title menu
+		from itemlist il,item i
+		where i.srl =
+		il.itemsrl
+		group by i.title
+		order by amount desc
+		limit 10
+	</select>
+
+	<select id="getTimeCnt" resultType="java.util.HashMap">
+		select hour(starttime )
+		mytime ,count(*) cnt ,count(*)/(select count(*) from
+		orders)*1000000 color from orders group by hour(starttime );
+	</select>
+
+
+	<select id="leastmenu" resultType="java.util.HashMap">
+		select i.title title,
+		sum(ifnull(amount,0)) amount
+		from item i left outer join itemlist
+		il
+		on i.srl = il.itemsrl
+		group by i.title
+		order by amount
+		limit 10;
+	</select>
+
+
+	<select id="ageChart" resultType="java.util.HashMap">
+		select
+		A.agearea age,
+		(A.cnt/(select count(*) from customer))*100 malecnt,
+		(B.cnt/(select count(*) from customer))*100 femalecnt
+		from
+		(SELECT
+		if( age>=10,left(age,1),0) agearea , count(*) cnt,
+		if(sex=1,"female","male") strsex from customer group by
+		agearea,sex) A ,
+		(SELECT if( age>=10,left(age,1),0) agearea , count(*)
+		cnt,
+		if(sex=1,"female","male") strsex from customer group by
+		agearea,sex) B
+		where
+		A.agearea=B.agearea and
+		A.strsex!=B.strsex and
+		A.strsex='male'
+		order by age desc;
+
+	</select>
+
+	<select id="taste1" resultType="java.util.HashMap">
+		select avg(sweet) swt, avg(sour)
+		sr, avg(soft) sft
+		from customer
+		where age <![CDATA[<]]>
+		20;
+	</select>
+
+	<select id="taste2" resultType="java.util.HashMap">
+		select avg(sweet) swt, avg(sour)
+		sr, avg(soft) sft
+		from customer
+		where age <![CDATA[>=]]>
+		20 and age <![CDATA[<]]>
+		30;
+	</select>
+	<select id="taste3" resultType="java.util.HashMap">
+		select avg(sweet) swt, avg(sour)
+		sr, avg(soft) sft
+		from customer
+		where age <![CDATA[>=]]>
+		30 and age <![CDATA[<]]>
+		40;
+	</select>
+	<select id="taste4" resultType="java.util.HashMap">
+		select avg(sweet) swt, avg(sour)
+		sr, avg(soft) sft
+		from customer
+		where age <![CDATA[>=]]>
+		40 and age <![CDATA[<]]>
+		50;
+	</select>
+	<select id="taste5" resultType="java.util.HashMap">
+		select avg(sweet) swt, avg(sour)
+		sr, avg(soft) sft
+		from customer
+		where age <![CDATA[>=]]>
+		50;
+	</select>
+	<select id="login" resultType="int" parameterType="java.util.HashMap">
+		SELECT count(*) FROM icecream.admin where id=#{id} and pw=#{pw};
+	</select>
+
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="customer">
+	<insert id="join" parameterType="kr.ice.cream.dto.CustomerDTO">
+		INSERT INTO customer
+		(id,password,name,age,phone,sweet,sour,soft,joindate,sex) VALUES
+		(#{id},#{password},#{name},#{age},#{phone},#{sweet},#{sour},#{soft},now(),#{sex});
+	</insert>
+	<select id="login" parameterType="Map" resultType="kr.ice.cream.dto.CustomerDTO">
+		SELECT *
+		FROM customer
+		WHERE id=#{id} and password=#{password};
+	</select>
+	<update id="loginDate" parameterType="Map">
+		UPDATE customer
+		SET lastlogindate=now()
+		WHERE id=#{id} and password=#{password};
+	</update>
+	<update id="alter" parameterType="kr.ice.cream.dto.CustomerDTO">
+		UPDATE customer
+		SET password=#{password},phone=#{phone}
+		WHERE id=#{id};
+	</update>
+	<select id="idDupCheck" parameterType="String" resultType="kr.ice.cream.dto.CustomerDTO">
+		SELECT *
+		FROM customer
+		WHERE id=#{id};	
+	</select>
+	<delete id="dropout" parameterType="Integer">
+		DELETE
+		FROM customer
+		WHERE srl=#{srl};
+	</delete>
+	
+</mapper>
